@@ -147,3 +147,17 @@ ros2 run hri_manipulation jacobian_torque_node
 
 # Terminal 3 – Admittance control node
 ros2 run hri_manipulation admittance_node
+
+## Task 3 – Jacobian-Transpose Torque Mapping (Simulation)
+
+This folder contains a Python implementation of:
+
+- Forward Kinematics (FK)
+- Inverse Kinematics (IK)
+- Jacobian computation for a 3-DoF planar manipulator
+- Torque mapping using τ = JᵀF
+
+These scripts simulate the core mathematical concepts used in manipulator
+interaction tasks without requiring any hardware or robot model. 
+See `hri_tasks/planar_arm.py` for the complete implementation.
+
