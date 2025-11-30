@@ -148,6 +148,8 @@ ros2 run hri_manipulation jacobian_torque_node
 # Terminal 3 – Admittance control node
 ros2 run hri_manipulation admittance_node
 
+---
+
 ## Task 3 – Jacobian-Transpose Torque Mapping (Simulation)
 
 This folder contains a Python implementation of:
