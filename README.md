@@ -101,3 +101,49 @@ This project simulates core HRI/Manipulation concepts:
 * Visualization of manipulator kinematics
 * ROS2 node–based arm actuation
 
+## 🦾 HRI Manipulation – Planar 3-DoF Arm 
+
+This part of the repository implements a **HRI manipulation ** using a planar 3-DoF arm model in Python + ROS2.  
+It covers the full pipeline from kinematics to interaction:
+
+### Implemented Components
+
+- **Planar Arm Kinematics (`planar_arm.py`)**
+  - 3-DoF planar manipulator
+  - Forward kinematics: \[(q1, q2, q3) → (x, y, α)\]
+  - Inverse kinematics: \[(x, y, α) → (q1, q2, q3)\]
+
+- **IK Node (`ik_node.py`)**
+  - ROS2 node that computes IK for a fixed end-effector target
+  - Publishes joint angles on topic: `/joint_angles` (`Float64MultiArray`)
+
+- **Jacobian + Torque Mapping Node (`jacobian_torque_node.py`)**
+  - Subscribes to `/joint_angles`
+  - Computes the analytical Jacobian of the 3-DoF arm
+  - Uses **τ = Jᵀ·F** to map a simulated force vector **F** to joint torques
+  - Publishes torques on `/joint_torque` (`Float64MultiArray`)
+
+- **Admittance Control Node (`admittance_node.py`)**
+  - Subscribes to `/joint_torque`
+  - Converts torque magnitude → external force input
+  - Simulates 1-DoF **admittance control** using a mass–spring–damper model:
+
+    \[
+    M \ddot{x} + D \dot{x} + K x = F
+    \]
+
+  - Integrates position over time and publishes on `/admittance_position`
+
+### How to Run (Task 2 Pipeline)
+
+In three terminals:
+
+```bash
+# Terminal 1 – Inverse Kinematics node
+ros2 run hri_manipulation ik_node
+
+# Terminal 2 – Jacobian torque node
+ros2 run hri_manipulation jacobian_torque_node
+
+# Terminal 3 – Admittance control node
+ros2 run hri_manipulation admittance_node
