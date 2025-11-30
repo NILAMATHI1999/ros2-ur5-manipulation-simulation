@@ -163,3 +163,115 @@ These scripts simulate the core mathematical concepts used in manipulator
 interaction tasks without requiring any hardware or robot model. 
 See `hri_tasks/planar_arm.py` for the complete implementation.
 
+
+
+# 🟦 **Task 4 – Teleoperation & Human–Robot Interaction (Simulation Only)**
+
+This task implements the key concepts of teleoperation and force-based interaction **entirely in ROS2 simulation** (no hardware or joystick required).
+Three nodes were developed to replicate the core functionality of the lab task:
+
+---
+
+## 🔹 **1. `fsr_sensor.py` — Simulated Force Sensor Publisher**
+
+Publishes a smooth oscillating force signal on the topic **`/pub_force`**.
+
+* Output range: **0 → 20 N**
+* Frequency: 10 Hz
+* Purpose: simulate tactile/force input from an FSR sensor
+
+---
+
+## 🔹 **2. `mapping_node.py` — Force Normalization (0–1)**
+
+Subscribes to raw force → normalizes using:
+
+[
+f_{mapped} = \frac{f}{\text{max_sensor_force}}
+]
+
+* ROS parameter: **`max_sensor_force`**
+* Publishes on **`/force_mapped`**
+* Clamps values to the valid range [0, 1]
+
+---
+
+## 🔹 **3. `teleoperation.py` — Simulated Joystick + Haptic Feedback**
+
+Imitates a teleoperation system:
+
+### ✔ Simulated joystick
+
+Generates a time-based twist command:
+
+* `cmd_vel.linear.x`
+* `cmd_vel.angular.z`
+* Simulated gripper width
+
+### ✔ Haptic vibration
+
+Uses **`force_mapped`** to print vibration intensity (0–1).
+
+### ✔ Topics:
+
+* Publishes: **`/cmd_vel`**, **`/gripper_width`**
+* Subscribes: **`/force_mapped`**
+
+---
+
+## 🔹 **4. Architecture Overview**
+
+```
+fsr_sensor  →  pub_force
+      ↓
+mapping_node  →  force_mapped
+      ↓
+teleoperation  →  cmd_vel, gripper_width, vibration output
+```
+
+This reproduces the conceptual teleoperation pipeline:
+
+* sensing
+* mapping
+* interaction feedback
+
+without any physical device.
+
+---
+
+## 🔹 **Run the pipeline**
+
+Terminal 1:
+
+```bash
+ros2 run hri_manipulation fsr_sensor
+```
+
+Terminal 2:
+
+```bash
+ros2 run hri_manipulation force_mapping_node
+```
+
+Terminal 3:
+
+```bash
+ros2 run hri_manipulation teleoperation_node
+```
+
+---
+
+## 🔹 **Outcome**
+
+This simulation successfully demonstrates:
+
+* sensor signal processing
+* parameter handling
+* normalized force mapping
+* teleoperation logic
+* haptic interaction model
+
+All work is **software-only**, matching real HRI concepts while remaining fully portable.
+
+---
+
