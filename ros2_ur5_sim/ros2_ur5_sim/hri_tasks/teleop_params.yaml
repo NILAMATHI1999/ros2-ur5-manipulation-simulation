@@ -1,0 +1,4 @@
+force_mapping_node:
+  ros__parameters:
+    max_sensor_force: 20.0
+

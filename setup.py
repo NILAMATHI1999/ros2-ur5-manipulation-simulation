@@ -25,5 +25,8 @@ setup(
 'admittance_node = hri_manipulation.admittance_node:main',
         'lifting_service_node = hri_manipulation.lifting_service_node:main',
         'ur5_joint_motion_node = hri_manipulation.ur5_joint_motion_node:main', ],
-    },
+# NEW for Task 4:
+        'fsr_sensor = hri_manipulation.fsr_sensor:main',
+        'force_mapping_node = hri_manipulation.mapping_node:main',
+        'teleoperation_node = hri_manipulation.teleoperation:main',    },
 )
